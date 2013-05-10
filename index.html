@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular.min.js"></script>
+    <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.3.0.js"></script>
+    <title>MIO: Kinvey</title>
+</head>
+<body ng-app="mio">
+<h2>Welcome to MIO app</h2>
+<div class='container-fluid' ng-controller="TypeaheadCtrl">
+    <pre>Model: {{selected| json}}</pre>
+    <input type="text" ng-model="selected" typeahead="state for state in states | filter:$viewValue">
+</div>
+</body>
+<script>
+
+    angular.module('mio', ['ui.bootstrap']);
+
+    function TypeaheadCtrl($scope) {
+
+        $scope.selected = undefined;
+        $scope.states = ['Alabama', 'Alaska', 'Arizona'];
+    }
+</script>
+</html>
