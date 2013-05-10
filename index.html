@@ -4,6 +4,7 @@
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular.min.js"></script>
     <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.3.0.js"></script>
+    <script src="https://da189i1jfloii.cloudfront.net/js/kinvey-js-0.9.14.min.js"></script>
     <title>MIO: Kinvey</title>
 </head>
 <body ng-app="mio">
@@ -15,6 +16,12 @@
     </label>
 </div>
 </body>
+<script id=kinvey>
+    Kinvey.init({
+        'appKey': 'kid_TVOZYQTGkM',
+        'appSecret': '8dca2aac0cc9492c9e01bd6c25b9a10b'
+    });
+</script>
 <script>
 
     angular.module('mio', ['ui.bootstrap'], null);
