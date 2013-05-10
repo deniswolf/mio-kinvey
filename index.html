@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular.min.js"></script>
     <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.3.0.js"></script>
     <script src="https://da189i1jfloii.cloudfront.net/js/kinvey-js-0.9.14.min.js"></script>
@@ -21,6 +21,74 @@
         'appKey': 'kid_TVOZYQTGkM',
         'appSecret': '8dca2aac0cc9492c9e01bd6c25b9a10b'
     });
+
+    // code to parse hash with FB auth data
+    // Extract ?<qs>#<hash>.
+    var hash = document.location.hash.substring(1);
+    var qs   = document.location.search.substring(1);
+    var data = hash + '&' + qs;// Join together for easy processing.
+    var tokens = {};
+    data.split('&').forEach(function(pair) {
+        var segments = pair.split('=', 2).map(decodeURIComponent);
+        if(segments[0]) {// Key must be non-empty.
+            tokens[segments[0]] = segments[1];
+        }
+    });
+    if(Kinvey.getCurrentUser()){
+        return;
+    }
+    else if(!tokens['access_token']){
+
+        Kinvey.OAuth.requestToken('facebook', {
+            redirect: "http://localhost:8000/",
+            success: function(tokens) {
+                document.location.href = tokens.url;
+            },
+            error: function(e) {
+                alert('fail:'+JSON.stringify(e))
+
+                // Failed to request a token.
+                // e holds information about the nature of the error.
+            }
+        })
+    } else {
+        Kinvey.OAuth.accessToken('facebook', tokens, {
+            success: function(tokens) {
+                // Create a new user object, and login using a Facebook access token. The second
+                // argument can be used to set additional user properties (in this case: "name").
+                var user = new Kinvey.User();
+                user.loginWithFacebook({
+                    access_token: tokens.access_token,
+                    expires_in: tokens.expires_in
+                }, {}, {
+                    success: function(user) {
+                        document.location.hash='';
+                        alert('super ok'+JSON.stringify(user));
+                        // The Facebook account is now linked to a Kinvey.User.
+                        // user.getIdentity() will return the users Facebook identity.
+                    },
+                    error: function(e) {
+                        alert('fail:'+JSON.stringify(e))
+                        // Failed to login with Facebook.
+                        // e holds information about the nature of the error.
+                    }
+                });
+                /*
+                 {
+                 "access_token": "<access-token>"
+                 "expires_in": "<expires_in>"
+                 }
+                 */
+            },
+            error: function(e) {
+                alert('wtf:'+JSON.stringify(e))
+                // Failed to obtain an access token.
+                // e holds information about the nature of the error.
+            }
+        })
+    }
+
+
 </script>
 <script>
 
