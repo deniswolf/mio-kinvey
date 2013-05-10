@@ -8,17 +8,18 @@
 </head>
 <body ng-app="mio">
 <h2>Welcome to MIO app</h2>
-<div class='container-fluid' ng-controller="TypeaheadCtrl">
-    <pre>Model: {{selected| json}}</pre>
-    <input type="text" ng-model="selected" typeahead="state for state in states | filter:$viewValue">
+<div class='container-fluid' ng-controller="friendsSelector">
+    <pre>Friend: {{selected| json}}</pre>
+    <label>
+        <input type="text" ng-model="selected" typeahead="state for state in states | filter:$viewValue">
+    </label>
 </div>
 </body>
 <script>
 
-    angular.module('mio', ['ui.bootstrap']);
+    angular.module('mio', ['ui.bootstrap'], null);
 
-    function TypeaheadCtrl($scope) {
-
+    function friendsSelector($scope) {
         $scope.selected = undefined;
         $scope.states = ['Alabama', 'Alaska', 'Arizona'];
     }
